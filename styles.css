@@ -225,6 +225,9 @@ section {
   font-weight: 600;
   color: var(--text-color-1);
   font-size: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .packages .box-container .box .content .price span {
   font-weight: lighter;
@@ -237,6 +240,10 @@ section {
   padding: 0.5rem 0;
   color: var(--text-color-2);
   line-height: 1.7;
+  flex: 1;
+  text-wrap: initial;
+
+  overflow: scroll;
 }
 /* The Modal (background) */
 .modal {

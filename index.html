@@ -15,7 +15,7 @@
       <a href="#" class="logo" rel="noopener noreferrer"
         ><i class="fa-solid fa-camera"></i>Gallery</a
       >
-      <form action="" class="search-form">
+      <form onsubmit="submitSearch(event)" action="" class="search-form">
         <input
           id="searchBox"
           id="searchBox"
@@ -23,7 +23,7 @@
           name=""
           placeholder="search here.."
         />
-        <label id="search-btn" for="searchBox" class="fas fa-search"></label>
+        <button style="margin-top: auto; margin-bottom: auto; margin-left: 10px; margin-right: 10px;" type="submit" id="search-btn" for="searchBox" class="fas fa-search"></button>
       </form>
       <div class="icons">
         <div class="fas fa-moon" id="theme-btn"></div>
@@ -49,7 +49,7 @@
           </div>
           <div class="content">
             <div class="price">
-              <p>Welcome to my Gallery i open you will all enjoy</p>
+              <p>Welcome to my Gallery i hope you will all enjoy</p>
               <button class="btn">book now</button>
             </div>
           </div>

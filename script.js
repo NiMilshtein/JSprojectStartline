@@ -1,4 +1,5 @@
-nextPage = 2;
+let nextPage;
+let currentSearchTerm = '';
 const fetchPixabayData = async (q, page) => {
   try {
     const response = await fetch(
@@ -27,32 +28,16 @@ function updateModalContent(image) {
   modalFooter.innerHTML = `<h3>Downloads: ${image.downloads}</h3>`;
 }
 const handleShowMoreClick = async () => {
-  const searchBox = document.getElementById("searchBox");
-  const searchValue = searchBox.value.trim();
+  const searchValue = currentSearchTerm;
 
   if (searchValue !== "") {
     try {
+      nextPage++;
       const data = await fetchPixabayData(searchValue, nextPage);
       const imageContainer = document.getElementById("imageContainer");
 
       data.hits.forEach((image) => {
-        const boxElement = document.createElement("div");
-        boxElement.classList.add("box");
-
-        const imgElementDiv = document.createElement("div");
-        imgElementDiv.classList.add("image");
-
-        const imgElement = document.createElement("img");
-        imgElement.src = image.webformatURL;
-        imgElement.alt = image.tags;
-
-        const headingElement = document.createElement("h3");
-        headingElement.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${image.user}`;
-
-        imgElementDiv.appendChild(imgElement);
-        imgElementDiv.appendChild(headingElement);
-        boxElement.appendChild(imgElementDiv);
-
+        const boxElement = createImageBox(image, searchValue);
         imageContainer.appendChild(boxElement);
       });
 
@@ -69,51 +54,22 @@ const handleShowMoreClick = async () => {
 };
 
 const handleSearchClick = async () => {
+  nextPage = 1;
   const searchBox = document.getElementById("searchBox");
   const searchValue = searchBox.value.trim();
 
   if (searchValue !== "") {
+    currentSearchTerm = searchValue;
     try {
-      const data = await fetchPixabayData(searchValue);
+      const data = await fetchPixabayData(searchValue, nextPage);
+      console.log(nextPage);
       const imageContainer = document.getElementById("imageContainer");
       imageContainer.innerHTML = "";
       showMoreBtn.style.display = "block";
       imageContainer.classList.add("box-container");
       console.log(imageContainer);
       data.hits.forEach((image) => {
-        const boxElement = document.createElement("div");
-        boxElement.classList.add("box");
-        const imgElementDiv = document.createElement("div");
-        imgElementDiv.classList.add("image");
-        const imgElement = document.createElement("img");
-        imgElement.src = image.webformatURL;
-        imgElement.alt = image.tags;
-
-        const headingElement = document.createElement("h3");
-        headingElement.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${image.user}`;
-        const contentDiv = document.createElement("div");
-        contentDiv.classList.add("content");
-        const priceDiv = document.createElement("div");
-        priceDiv.classList.add("price");
-        const pElement = document.createElement("p");
-        pElement.textContent = `Explore captivating images of ${searchValue} and embark on a visual journey like never before. From enchanting landscapes to urban wonders, our collection offers a glimpse into the beauty of diverse destinations. Whether you're an adventurer or an art enthusiast, these images will spark your imagination and inspire your wanderlust. Join us in celebrating the world's wonders.`;
-        const priceAElement = document.createElement("button");
-        priceAElement.innerHTML = "Open Modal";
-        priceAElement.classList.add("btn");
-        priceAElement.addEventListener("click", function () {
-          modal.style.display = "block";
-        });
-        priceAElement.addEventListener("click", function () {
-          modal.style.display = "block";
-          updateModalContent(image); // Update modal content with image details
-        });
-        boxElement.appendChild(imgElementDiv);
-        boxElement.appendChild(contentDiv);
-        contentDiv.appendChild(priceDiv);
-        priceDiv.appendChild(pElement);
-        priceDiv.appendChild(priceAElement);
-        imgElementDiv.appendChild(imgElement);
-        imgElementDiv.appendChild(headingElement);
+        const boxElement = createImageBox(image, searchValue);
         imageContainer.appendChild(boxElement);
       });
       console.log("Fetched data:", data);
@@ -144,7 +100,49 @@ window.onclick = function (event) {
     modal.style.display = "none";
   }
 };
-const searchButton = document.getElementById("search-btn");
-searchButton.addEventListener("click", handleSearchClick);
+
+const submitSearch = async (e) => {
+  e.preventDefault();
+  await handleSearchClick();
+};
+
 const showMoreBtn = document.getElementById("showMoreBtn");
 showMoreBtn.addEventListener("click", handleShowMoreClick);
+
+function createImageBox(image, searchValue) {
+  const boxElement = document.createElement("div");
+  boxElement.classList.add("box");
+  const imgElementDiv = document.createElement("div");
+  imgElementDiv.classList.add("image");
+  const imgElement = document.createElement("img");
+  imgElement.src = image.webformatURL;
+  imgElement.alt = image.tags;
+
+  const headingElement = document.createElement("h3");
+  headingElement.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${image.user}`;
+  const contentDiv = document.createElement("div");
+  contentDiv.classList.add("content");
+  const priceDiv = document.createElement("div");
+  priceDiv.classList.add("price");
+  const pElement = document.createElement("p");
+  pElement.textContent = `Explore captivating images of ${searchValue} and embark on a visual journey like never before. From enchanting landscapes to urban wonders, our collection offers a glimpse into the beauty of diverse destinations. Whether you're an adventurer or an art enthusiast, these images will spark your imagination and inspire your wanderlust. Join us in celebrating the world's wonders.`;
+  const priceAElement = document.createElement("button");
+  priceAElement.innerHTML = "Open Modal";
+  priceAElement.classList.add("btn");
+  priceAElement.addEventListener("click", function () {
+    modal.style.display = "block";
+  });
+  priceAElement.addEventListener("click", function () {
+    modal.style.display = "block";
+    updateModalContent(image); // Update modal content with image details
+  });
+  boxElement.appendChild(imgElementDiv);
+  boxElement.appendChild(contentDiv);
+  contentDiv.appendChild(priceDiv);
+  priceDiv.appendChild(pElement);
+  priceDiv.appendChild(priceAElement);
+  imgElementDiv.appendChild(imgElement);
+  imgElementDiv.appendChild(headingElement);
+  return boxElement;
+}
+
