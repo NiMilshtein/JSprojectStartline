@@ -2,11 +2,7 @@ let nextPage;
 let currentSearchTerm = '';
 const fetchPixabayData = async (q, page) => {
   try {
-    const response = await fetch(
-      `http://localhost:3000/api/pixabay?q=${encodeURIComponent(
-        q
-      )}&page=${page}`
-    );
+    const response = await fetch(`http://localhost:3000/api/pixabay?q=${encodeURIComponent(q)}&page=${page}`);
     const data = await response.json();
     return data;
   } catch (error) {
@@ -27,6 +23,7 @@ function updateModalContent(image) {
   const modalFooter = document.querySelector(".modal-footer");
   modalFooter.innerHTML = `<h3>Downloads: ${image.downloads}</h3>`;
 }
+
 const handleShowMoreClick = async () => {
   const searchValue = currentSearchTerm;
 
@@ -65,7 +62,7 @@ const handleSearchClick = async () => {
       console.log(nextPage);
       const imageContainer = document.getElementById("imageContainer");
       imageContainer.innerHTML = "";
-      showMoreBtn.style.display = "block";
+      showMoreBtn.style.display = 'initial';
       imageContainer.classList.add("box-container");
       console.log(imageContainer);
       data.hits.forEach((image) => {
@@ -80,16 +77,11 @@ const handleSearchClick = async () => {
     alert("Please enter a search term.");
   }
 };
+
+
 let modal = document.getElementById("myModal");
-
-let btn = document.getElementsByClassName("btn")[0];
-
 let span = document.getElementsByClassName("close")[0];
 
-btn.onclick = function () {
-  console.log("modal open");
-  modal.style.display = "block";
-};
 
 span.onclick = function () {
   modal.style.display = "none";
@@ -110,39 +102,70 @@ const showMoreBtn = document.getElementById("showMoreBtn");
 showMoreBtn.addEventListener("click", handleShowMoreClick);
 
 function createImageBox(image, searchValue) {
-  const boxElement = document.createElement("div");
-  boxElement.classList.add("box");
-  const imgElementDiv = document.createElement("div");
-  imgElementDiv.classList.add("image");
-  const imgElement = document.createElement("img");
-  imgElement.src = image.webformatURL;
-  imgElement.alt = image.tags;
+  const imageBoxTemplate = document.querySelector('#image-box');
+  const newImageBox = imageBoxTemplate.content.cloneNode(true);
+  const imageElement = newImageBox.querySelector('.image img');
+  const openModalButton = newImageBox.querySelector('.open-modal-button');
+  const favoriteStarButton = newImageBox.querySelector('.favorite-star-button');
 
-  const headingElement = document.createElement("h3");
-  headingElement.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${image.user}`;
-  const contentDiv = document.createElement("div");
-  contentDiv.classList.add("content");
-  const priceDiv = document.createElement("div");
-  priceDiv.classList.add("price");
-  const pElement = document.createElement("p");
-  pElement.textContent = `Explore captivating images of ${searchValue} and embark on a visual journey like never before. From enchanting landscapes to urban wonders, our collection offers a glimpse into the beauty of diverse destinations. Whether you're an adventurer or an art enthusiast, these images will spark your imagination and inspire your wanderlust. Join us in celebrating the world's wonders.`;
-  const priceAElement = document.createElement("button");
-  priceAElement.innerHTML = "Open Modal";
-  priceAElement.classList.add("btn");
-  priceAElement.addEventListener("click", function () {
+  const favoriteImageIcon = favoriteStarButton.querySelector('.favorite-button-icon');
+  let isFavoriteImage = localStorage.getItem(`isFavoriteImage:${image.id}`) || false;
+  favoriteImageIcon.classList.add(isFavoriteImage ? 'fa-solid' : 'fa-regular')
+
+  favoriteStarButton.addEventListener('click', () => {
+    if (isFavoriteImage) {
+      favoriteImageIcon.classList.remove('fa-solid');
+      favoriteImageIcon.classList.add('fa-regular');
+      localStorage.removeItem(`isFavoriteImage:${image.id}`);
+      isFavoriteImage = !isFavoriteImage;
+    } else {
+      favoriteImageIcon.classList.remove('fa-regular');
+      favoriteImageIcon.classList.add('fa-solid');
+      localStorage.setItem(`isFavoriteImage:${image.id}`, 'true');
+      isFavoriteImage = !isFavoriteImage;
+    }
+  });
+
+  openModalButton.addEventListener('click', () => {
+    updateModalContent(image)
     modal.style.display = "block";
   });
-  priceAElement.addEventListener("click", function () {
-    modal.style.display = "block";
-    updateModalContent(image); // Update modal content with image details
-  });
-  boxElement.appendChild(imgElementDiv);
-  boxElement.appendChild(contentDiv);
-  contentDiv.appendChild(priceDiv);
-  priceDiv.appendChild(pElement);
-  priceDiv.appendChild(priceAElement);
-  imgElementDiv.appendChild(imgElement);
-  imgElementDiv.appendChild(headingElement);
-  return boxElement;
+  imageElement.src = image.webformatURL;
+  return newImageBox;
+  
+  // const boxElement = document.createElement("div");
+  // boxElement.classList.add("box");
+  // const imgElementDiv = document.createElement("div");
+  // imgElementDiv.classList.add("image");
+  // const imgElement = document.createElement("img");
+  // imgElement.src = image.webformatURL;
+  // imgElement.alt = image.tags;
+
+  // const headingElement = document.createElement("h3");
+  // headingElement.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${image.user}`;
+  // const contentDiv = document.createElement("div");
+  // contentDiv.classList.add("content");
+  // const priceDiv = document.createElement("div");
+  // priceDiv.classList.add("price");
+  // const pElement = document.createElement("p");
+  // pElement.textContent = `Explore captivating images of ${searchValue} and embark on a visual journey like never before. From enchanting landscapes to urban wonders, our collection offers a glimpse into the beauty of diverse destinations. Whether you're an adventurer or an art enthusiast, these images will spark your imagination and inspire your wanderlust. Join us in celebrating the world's wonders.`;
+  // const priceAElement = document.createElement("button");
+  // priceAElement.innerHTML = "Open Modal";
+  // priceAElement.classList.add("btn");
+  // priceAElement.addEventListener("click", function () {
+  //   modal.style.display = "block";
+  // });
+  // priceAElement.addEventListener("click", function () {
+  //   modal.style.display = "block";
+  //   updateModalContent(image); // Update modal content with image details
+  // });
+  // boxElement.appendChild(imgElementDiv);
+  // boxElement.appendChild(contentDiv);
+  // contentDiv.appendChild(priceDiv);
+  // priceDiv.appendChild(pElement);
+  // priceDiv.appendChild(priceAElement);
+  // imgElementDiv.appendChild(imgElement);
+  // imgElementDiv.appendChild(headingElement);
+  // return boxElement;
 }
 

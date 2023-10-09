@@ -3,61 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <script
-      src="https://kit.fontawesome.com/9f99b78c35.js"
-      crossorigin="anonymous"
-    ></script>
+    <title>Gallery</title>
+    <script src="https://kit.fontawesome.com/9f99b78c35.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="header">
-      <a href="#" class="logo" rel="noopener noreferrer"
-        ><i class="fa-solid fa-camera"></i>Gallery</a
-      >
-      <form onsubmit="submitSearch(event)" action="" class="search-form">
-        <input
-          id="searchBox"
-          id="searchBox"
-          type="search"
-          name=""
-          placeholder="search here.."
-        />
-        <button style="margin-top: auto; margin-bottom: auto; margin-left: 10px; margin-right: 10px;" type="submit" id="search-btn" for="searchBox" class="fas fa-search"></button>
+      <a href="/" class="logo">
+        <i class="fa-solid fa-camera"></i>
+        <span>Gallery</span>
+      </a>
+      <form onsubmit="submitSearch(event)" action="#" class="search-form">
+        <input id="searchBox" type="search" name="searchBox" placeholder="search here.." />
+        <button type="submit" id="search-btn" class="fas fa-search"></button>
       </form>
-      <div class="icons">
-        <div class="fas fa-moon" id="theme-btn"></div>
-        <div class="fas fa-bars" id="mend-btn"></div>
-      </div>
-      <nav class="navbar">
-        <a href="http://">home</a>
-        <a href="http://">packages</a>
-        <a href="http://">services</a>
-        <a href="http://">pricing</a>
-        <a href="http://">review</a>
-        <a href="http://">contact</a>
-        <a href="http://">blogs</a>
-      </nav>
     </header>
-    <section class="packages" id="packages">
+    <section>
       <h1 class="heading">Our <span>Gallery</span></h1>
-      <div class="box-container" id="imageContainer">
-        <div style="width: 50%; margin: 0 auto" class="box">
-          <div class="image">
-            <img src="./IMAGES/pic.jpg" alt="" />
-            <h3><i class="fas fa-map-marker-alt"></i> Nimrod</h3>
-          </div>
-          <div class="content">
-            <div class="price">
-              <p>Welcome to my Gallery i hope you will all enjoy</p>
-              <button class="btn">book now</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button style="display: none" id="showMoreBtn" class="btn">
-        Show More
-      </button>
+      <div class="box-container" id="imageContainer"></div>
+      <div class="show-more-button-wrapper"><button id="showMoreBtn">Show More</button></div>
     </section>
     <div id="myModal" class="modal">
       <div class="modal-content">
@@ -74,6 +38,25 @@
         </div>
       </div>
     </div>
+
+    <template id="image-box">
+      <div class="box">
+        <div class="image">
+          <img src="./IMAGES/pic.jpg" alt="" />
+          <h3><i class="fas fa-map-marker-alt"></i> Nimrod</h3>
+        </div>
+        <div class="content">
+          <div class="price">
+            <p>Welcome to my Gallery i hope you will all enjoy</p>
+          </div>
+          <button class="open-modal-button">book now</button>
+          <button class="favorite-star-button" ><i class="fa-star favorite-button-icon"></i></button>
+
+        </div>
+      </div>
+    </template>
+
     <script src="./script.js"></script>
+
   </body>
 </html>
